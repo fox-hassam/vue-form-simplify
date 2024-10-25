@@ -9,7 +9,7 @@ const props = defineProps({
   areaDescribedBy: String
 });
 
-const emit = defineEmits(["update:modelValuesHandler"]);
+const emit = defineEmits(["update:modelValue"]);
 
 </script>
 
@@ -22,7 +22,7 @@ const emit = defineEmits(["update:modelValuesHandler"]);
     placeholder=""
     :class="['mt-1.5 px-4 py-2 shadow rounded border border-gray:50', {'border-red-500': props.invalid}]"
     :value="props.modelValue"
-    @input="$event => emit('update:modelValuesHandler', {id: props.id, value: $event.target.value})"
+    @input="(event) => emit('update:modelValue', event.target.value)"
   />
 
 </template>

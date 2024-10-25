@@ -1,63 +1,38 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
-import Label from "@/components/Label.vue";
-import Input from "@/components/Input.vue";
-import Textarea from "@/components/Textarea.vue";
-import ErrorMessage from "@/components/ErrorMessage.vue";
+import Field from "@/components/Field.vue";
 
 type UserData = {
   "firstName": string,
   "lastName": number,
   "email": string,
-  "message": string
+  "message": string,
+  "country": string,
 }
 
 const errors = ref({
   firstName: '',
   lastName: '',
   email: '',
-  message: ''
+  message: '',
+  country: '',
 });
 const formData = ref<UserData>({});
 
 const onSubmitForm = () => {
-  const validated = validateInputs();
-  console.log(validated)
+  validateInputs();
 
-  console.log(formData.value);
+  alert(JSON.stringify(formData.value));
 }
 
 const validateInputs = () => {
-  if (!formData.value.firstName || formData.value.firstName === '') {
-    errors.value.firstName = 'First name is required!';
-  }
-  if (!formData.value.lastName || formData.value.lastName === '') {
-    errors.value.lastName = 'Last name is required!';
-  }
-  if (!formData.value.email || formData.value.email === '') {
-    errors.value.email = 'Email name is required!';
-  }
-  if (!formData.value.message || formData.value.message === '') {
-    errors.value.message = 'Message is required!';
-  }
-
-  return errors.value;
-}
-
-const modelValuesHandler = (attr) => {
-  formData.value = {
-    ...formData.value,
-    [attr.id]: attr.value
-  }
-
-  errors.value = {
-    ...errors.value,
-    [attr.id]: ''
-  }
-
-  console.log(formData.value)
-}
+  errors.value.firstName = formData.value.firstName ? '' : 'First name is required!';
+  errors.value.lastName = formData.value.lastName ? '' : 'Last name is required!';
+  errors.value.email = formData.value.email ? '' : 'Email is required!';
+  errors.value.message = formData.value.message ? '' : 'Message is required!';
+  errors.value.country = formData.value.country ? '' : 'Country is required!';
+};
 </script>
 
 <template>
@@ -70,74 +45,65 @@ const modelValuesHandler = (attr) => {
         </div>
         <form autocomplete="off" @submit.prevent="onSubmitForm">
           <div class="grid grid-cols-2 gap-2.5">
-            <div class="flex flex-col mb-4">
-              <Label
-                for="firstName"
-                :required="true">
-                First Name
-                <template v-slot:description>
-                  <span class="block text-xs font-light text-stone-400">lorem ipsum details...</span>
-                </template>
-              </Label>
-              <Input
-                type="text"
-                id="firstName"
-                model-value=""
-                :invalid="!!errors.firstName"
-                @update:model-values-handler="modelValuesHandler" />
-              <ErrorMessage v-if="errors.firstName" message="First name is required!" />
-            </div>
-            <div class="flex flex-col mb-4">
-              <Label
-                for="firstName"
-                :required="true">
-                Last Name
-                <template v-slot:description>
-                  <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-                </template>
-              </Label>
-              <Input
-                type="text"
-                id="lastName"
-                model-value=""
-                :invalid="!!errors.lastName"
-                @update:model-values-handler="modelValuesHandler"
-              />
-              <ErrorMessage v-if="errors.lastName" message="Last name is required!" />
-            </div>
-          </div>
-          <div class="flex flex-col mb-4">
-            <Label
-              for="email"
-              :required="true">
-              Email
-              <template v-slot:description>
-                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-              </template>
-            </Label>
-            <Input type="text"
-                   id="email"
-                   :invalid="!!errors.email"
-                   @update:model-values-handler="modelValuesHandler"
+            <Field
+              input-tag="input"
+              v-model="formData.firstName"
+              id="firstName"
+              label="First Name"
+              :required="true"
+              description="lorem ipsum details..."
+              :error-message="errors.firstName"
             />
-            <ErrorMessage v-if="errors.email" message="Email name is required!" />
+
+            <Field
+              input-tag="input"
+              v-model="formData.lastName"
+              id="lastName"
+              label="Last Name"
+              :required="true"
+              description="lorem ipsum details..."
+              :error-message="errors.lastName" />
           </div>
-          <div class="flex flex-col mb-4">
-            <Label
-              for="message"
-              :required="true">
-              Message
-              <template v-slot:description>
-                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-              </template>
-            </Label>
-            <Textarea
-              id="message"
-              :rows="3"
-              :invalid="!!errors.message"
-              @update:model-values-handler="modelValuesHandler" />
-            <ErrorMessage v-if="errors.message" message="Required field" />
-          </div>
+
+          <Field
+            input-tag="input"
+            v-model="formData.email"
+            id="email"
+            label="Email"
+            :required="true"
+            description="lorem ipsum details..."
+            :error-message="errors.email" />
+
+          <Field
+            input-tag="textarea"
+            v-model="formData.message"
+            id="message"
+            label="Message..."
+            :required="true"
+            description="lorem ipsum details..."
+            :error-message="errors.message" />
+
+          <Field
+            input-tag="select"
+            id="country"
+            label="Chose Country"
+            :error-message="errors.country"
+            v-slot="slotProps">
+            <select
+              v-model="formData.country"
+              v-bind="slotProps"
+              class="mt-2 px-6 py-2 shadow rounded border border-gray:50 bg-white">
+              <option value="1">Spain</option>
+              <option value="2">Egypt</option>
+              <option value="3">Palestine</option>
+              <option value="4">China</option>
+              <option value="5">Canada</option>
+              <option value="6">Mexico</option>
+              <option value="7">Uzbekistan</option>
+              <option value="8">Others</option>
+            </select>
+          </Field>
+
           <div class="mt-6 flex gap-6">
             <button type="submit" class="rounded-full bg-orange-400 py-2 px-10 font-bold text-white shadow hover:bg-orange-500">
               Button

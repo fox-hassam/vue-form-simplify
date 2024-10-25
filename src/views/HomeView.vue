@@ -4,6 +4,7 @@ import {ref} from "vue";
 import Label from "@/components/Label.vue";
 import Input from "@/components/Input.vue";
 import Textarea from "@/components/Textarea.vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 
 type UserData = {
   "firstName": string,
@@ -84,7 +85,7 @@ const modelValuesHandler = (attr) => {
                 model-value=""
                 :invalid="!!errors.firstName"
                 @update:model-values-handler="modelValuesHandler" />
-              <span class="block text-xs font-light text-red-800">First name is required!</span>
+              <ErrorMessage v-if="errors.firstName" message="First name is required!" />
             </div>
             <div class="flex flex-col mb-4">
               <Label
@@ -102,7 +103,7 @@ const modelValuesHandler = (attr) => {
                 :invalid="!!errors.lastName"
                 @update:model-values-handler="modelValuesHandler"
               />
-              <span class="block text-xs font-light text-red-800">Last name is required!</span>
+              <ErrorMessage v-if="errors.lastName" message="Last name is required!" />
             </div>
           </div>
           <div class="flex flex-col mb-4">
@@ -119,7 +120,7 @@ const modelValuesHandler = (attr) => {
                    :invalid="!!errors.email"
                    @update:model-values-handler="modelValuesHandler"
             />
-            <span class="block text-xs font-light text-red-800">Email name is required!</span>
+            <ErrorMessage v-if="errors.email" message="Email name is required!" />
           </div>
           <div class="flex flex-col mb-4">
             <Label
@@ -135,6 +136,7 @@ const modelValuesHandler = (attr) => {
               :rows="3"
               :invalid="!!errors.message"
               @update:model-values-handler="modelValuesHandler" />
+            <ErrorMessage v-if="errors.message" message="Required field" />
           </div>
           <div class="mt-6 flex gap-6">
             <button type="submit" class="rounded-full bg-orange-400 py-2 px-10 font-bold text-white shadow hover:bg-orange-500">

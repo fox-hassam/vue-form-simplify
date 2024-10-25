@@ -2,6 +2,8 @@
 
 import {ref} from "vue";
 import Label from "@/components/Label.vue";
+import Input from "@/components/Input.vue";
+import Textarea from "@/components/Textarea.vue";
 
 type UserData = {
   "firstName": string,
@@ -43,13 +45,7 @@ const onSubmitForm = () => {
                   <span class="block text-xs font-light text-stone-400">lorem ipsum details...</span>
                 </template>
               </Label>
-              <input
-                type="text"
-                id="firstName"
-                placeholder=""
-                class="mt-2 px-4 py-2 shadow rounded"
-                v-model:="formData.firstName"
-              />
+              <Input type="text" id="firstName" />
               <span class="block text-xs font-light text-red-800">First name is required!</span>
             </div>
             <div class="flex flex-col mb-4">
@@ -61,11 +57,7 @@ const onSubmitForm = () => {
                   <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
                 </template>
               </Label>
-              <input
-                type="text"
-                placeholder=""
-                class="mt-2 px-4 py-2 shadow rounded"
-                v-model:="formData.lastName"/>
+              <Input type="text" id="lastName" />
               <span class="block text-xs font-light text-red-800">Last name is required!</span>
             </div>
           </div>
@@ -78,12 +70,7 @@ const onSubmitForm = () => {
                 <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
               </template>
             </Label>
-            <input
-              type="email"
-              id="email"
-              placeholder=""
-              class="mt-2 px-4 py-2 shadow rounded"
-              v-model:="formData.email"/>
+            <Input type="text" id="email" />
             <span class="block text-xs font-light text-red-800">Email name is required!</span>
           </div>
           <div class="flex flex-col mb-4">
@@ -95,11 +82,7 @@ const onSubmitForm = () => {
                 <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
               </template>
             </Label>
-            <textarea
-              rows="5"
-              placeholder=""
-              class="mt-2 px-6 py-2 shadow rounded"
-              v-model:="formData.message"></textarea>
+            <Textarea id="message" rows="3" />
           </div>
           <div class="mt-6 flex gap-6">
             <button type="submit" class="rounded-full bg-orange-400 py-2 px-10 font-bold text-white shadow hover:bg-orange-500">

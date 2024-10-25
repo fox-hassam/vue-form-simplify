@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-import {reactive} from "vue";
+import {ref} from "vue";
+import Label from "@/components/Label.vue";
 
 type UserData = {
   "firstName": string,
@@ -9,17 +10,23 @@ type UserData = {
   "message": string
 }
 
-const formData = reactive<UserData>({});
+const errors = ref();
+const formData = ref<UserData>({});
 
 const onSubmitForm = () => {
-  console.log(formData);
+  errors.value = {
+    firstName: 'First name is required!',
+    lastName: 'Last name is required!',
+    email: 'Email name is required!',
+  };
+  console.log(formData.value);
+  console.log(errors.value);
 }
 </script>
 
 <template>
   <main>
     <!-- <TheWelcome />-->
-
     <div class="flex items-center justify-center bg-stone-100 p-4 w-full">
       <div class="p-6 rounded shadow-sm bg-stone-50 max-w-lg">
         <div class="mb-6 p-6 bg-white">
@@ -28,12 +35,17 @@ const onSubmitForm = () => {
         <form autocomplete="off" @submit.prevent="onSubmitForm">
           <div class="grid grid-cols-2 gap-2.5">
             <div class="flex flex-col mb-4">
-              <label>
-                <span>First Name</span>
-                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-              </label>
+              <Label
+                for="firstName"
+                :required="true">
+                First Name
+                <template v-slot:description>
+                  <span class="block text-xs font-light text-stone-400">lorem ipsum details...</span>
+                </template>
+              </Label>
               <input
                 type="text"
+                id="firstName"
                 placeholder=""
                 class="mt-2 px-4 py-2 shadow rounded"
                 v-model:="formData.firstName"
@@ -41,10 +53,14 @@ const onSubmitForm = () => {
               <span class="block text-xs font-light text-red-800">First name is required!</span>
             </div>
             <div class="flex flex-col mb-4">
-              <label>
-                <span>Last Name</span>
-                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-              </label>
+              <Label
+                for="firstName"
+                :required="true">
+                Last Name
+                <template v-slot:description>
+                  <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
+                </template>
+              </Label>
               <input
                 type="text"
                 placeholder=""
@@ -54,22 +70,31 @@ const onSubmitForm = () => {
             </div>
           </div>
           <div class="flex flex-col mb-4">
-            <label>
-              <span>Email</span>
-              <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-            </label>
+            <Label
+              for="email"
+              :required="true">
+              Email
+              <template v-slot:description>
+                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
+              </template>
+            </Label>
             <input
               type="email"
+              id="email"
               placeholder=""
               class="mt-2 px-4 py-2 shadow rounded"
               v-model:="formData.email"/>
             <span class="block text-xs font-light text-red-800">Email name is required!</span>
           </div>
           <div class="flex flex-col mb-4">
-            <label>
-              <span>Message</span>
-              <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
-            </label>
+            <Label
+              for="message"
+              :required="true">
+              Message
+              <template v-slot:description>
+                <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
+              </template>
+            </Label>
             <textarea
               rows="5"
               placeholder=""

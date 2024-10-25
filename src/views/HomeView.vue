@@ -12,17 +12,50 @@ type UserData = {
   "message": string
 }
 
-const errors = ref();
+const errors = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  message: ''
+});
 const formData = ref<UserData>({});
 
 const onSubmitForm = () => {
-  errors.value = {
-    firstName: 'First name is required!',
-    lastName: 'Last name is required!',
-    email: 'Email name is required!',
-  };
+  const validated = validateInputs();
+  console.log(validated)
+
   console.log(formData.value);
-  console.log(errors.value);
+}
+
+const validateInputs = () => {
+  if (!formData.value.firstName || formData.value.firstName === '') {
+    errors.value.firstName = 'First name is required!';
+  }
+  if (!formData.value.lastName || formData.value.lastName === '') {
+    errors.value.lastName = 'Last name is required!';
+  }
+  if (!formData.value.email || formData.value.email === '') {
+    errors.value.email = 'Email name is required!';
+  }
+  if (!formData.value.message || formData.value.message === '') {
+    errors.value.message = 'Message is required!';
+  }
+
+  return errors.value;
+}
+
+const modelValuesHandler = (attr) => {
+  formData.value = {
+    ...formData.value,
+    [attr.id]: attr.value
+  }
+
+  errors.value = {
+    ...errors.value,
+    [attr.id]: ''
+  }
+
+  console.log(formData.value)
 }
 </script>
 
@@ -45,7 +78,12 @@ const onSubmitForm = () => {
                   <span class="block text-xs font-light text-stone-400">lorem ipsum details...</span>
                 </template>
               </Label>
-              <Input type="text" id="firstName" />
+              <Input
+                type="text"
+                id="firstName"
+                model-value=""
+                :invalid="!!errors.firstName"
+                @update:model-values-handler="modelValuesHandler" />
               <span class="block text-xs font-light text-red-800">First name is required!</span>
             </div>
             <div class="flex flex-col mb-4">
@@ -57,7 +95,13 @@ const onSubmitForm = () => {
                   <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
                 </template>
               </Label>
-              <Input type="text" id="lastName" />
+              <Input
+                type="text"
+                id="lastName"
+                model-value=""
+                :invalid="!!errors.lastName"
+                @update:model-values-handler="modelValuesHandler"
+              />
               <span class="block text-xs font-light text-red-800">Last name is required!</span>
             </div>
           </div>
@@ -70,7 +114,11 @@ const onSubmitForm = () => {
                 <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
               </template>
             </Label>
-            <Input type="text" id="email" />
+            <Input type="text"
+                   id="email"
+                   :invalid="!!errors.email"
+                   @update:model-values-handler="modelValuesHandler"
+            />
             <span class="block text-xs font-light text-red-800">Email name is required!</span>
           </div>
           <div class="flex flex-col mb-4">
@@ -82,7 +130,11 @@ const onSubmitForm = () => {
                 <span class="block text-xs font-light text-stone-400">lorem ipsum details</span>
               </template>
             </Label>
-            <Textarea id="message" rows="3" />
+            <Textarea
+              id="message"
+              :rows="3"
+              :invalid="!!errors.message"
+              @update:model-values-handler="modelValuesHandler" />
           </div>
           <div class="mt-6 flex gap-6">
             <button type="submit" class="rounded-full bg-orange-400 py-2 px-10 font-bold text-white shadow hover:bg-orange-500">
